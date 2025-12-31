@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy New Year Baby ❤️</title>
+<style>
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ff5f6d, #ffc371);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+}
+
+/* Card styling */
+.card {
+  background: white;
+  padding: 30px;
+  border-radius: 25px;
+  text-align: center;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+  width: 90%;
+  max-width: 400px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+h1 {
+  color: #ff4f7a;
+}
+
+.hint {
+  color: #555;
+  font-size: 17px;
+}
+
+/* Chat bubble */
+.chat {
+  display: none;
+  margin-top: 20px;
+  text-align: left;
+}
+
+.bubble {
+  background: #dcf8c6;
+  padding: 12px 15px;
+  border-radius: 15px;
+  font-size: 16px;
+  line-height: 1.6;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: -8px;
+  border-top: 10px solid #dcf8c6;
+  border-left: 10px solid transparent;
+}
+
+/* Bouquet */
+.bouquet {
+  display: none;
+  margin-top: 25px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.flower {
+  font-size: 34px;
+  display: inline-block;
+  transform: scale(0);
+  animation: bloom 0.6s forwards;
+  animation-play-state: paused;
+}
+
+.flower:nth-child(1) { animation-delay: 0s; }
+.flower:nth-child(2) { animation-delay: 0.2s; }
+.flower:nth-child(3) { animation-delay: 0.4s; }
+.flower:nth-child(4) { animation-delay: 0.6s; }
+.flower:nth-child(5) { animation-delay: 0.8s; }
+
+@keyframes bloom { to { transform: scale(1); } }
+
+.bouquet-text {
+  margin-top: 10px;
+  font-size: 15px;
+  color: #ff4f7a;
+}
+
+/* Floating hearts */
+.heart {
+  position: absolute;
+  font-size: 22px;
+  animation: float 6s linear infinite;
+}
+
+@keyframes float {
+  from { transform: translateY(0) rotate(0deg); opacity: 1; }
+  to { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+}
+
+/* Fireworks */
+.firework {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+  to {
+    box-shadow:
+      -60px 0 #ff4f7a,
+      60px 0 #ffd700,
+      0 -60px #00eaff,
+      0 60px #fff,
+      -45px -45px #ff8fab,
+      45px 45px #ffb703;
+    opacity: 0;
+  }
+}
+
+/* Confetti */
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background-color: red;
+  opacity: 0.8;
+  pointer-events: none;
+  border-radius: 50%;
+  animation: confettiFall linear infinite;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(110vh) rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h1>Tap anywhere ❤️</h1>
+  <div class="hint">For My Sweet Wifey ✨</div>
+
+  <div class="chat" id="chat">
+    <div class="bubble" id="text"></div>
+  </div>
+
+  <div class="bouquet" id="bouquet">
+    <div class="flower">🌹</div>
+    <div class="flower">🌸</div>
+    <div class="flower">🌷</div>
+    <div class="flower">🌺</div>
+    <div class="flower">🌼</div>
+    <div class="bouquet-text">Tap the flowers 💐</div>
+  </div>
+</div>
+
+<audio id="song" preload="auto">
+  <source src="./love.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const card = document.getElementById("card");
+const chat = document.getElementById("chat");
+const textBox = document.getElementById("text");
+const bouquet = document.getElementById("bouquet");
+const song = document.getElementById("song");
+
+const message =
+`Happy New Year Babyyyy 🎆❤️
+
+This yr we spent 262 days
+as couples and we had a really
+interesting yr.Even though we 
+had many fights and arguments,
+u always stayed with me.Ur the 
+reason I sleep peacefully every 
+day.I think abt u every day bfr 
+going to sleep.And honestly idk 
+wht I did to deserve an angel 
+like u.I'll forever be greatful 
+for everything u hv done to me.
+Thankyou for making this whole 
+yr amazing and I hope we hv an 
+even wonderful yr this yr.
+Have a wonderful new year baby.
+I love uuuu ❤️
+
+I promise to choose you,
+this year and every year ❤️
+
+— Yours, Hari`;
+
+// Trigger card on tap
+card.addEventListener("click", startCard, { once: true });
+card.addEventListener("touchstart", startCard, { once: true });
+
+function startCard() {
+  card.querySelector("h1").style.display = "none";
+  card.querySelector(".hint").style.display = "none";
+  chat.style.display = "block";
+
+  playMusic();
+  typeMessage();
+  startHearts(40);
+  startFireworks(6);
+  startConfetti(80);
+}
+
+// Typing message animation
+function typeMessage() {
+  let i = 0;
+  textBox.innerHTML = "";
+  const interval = setInterval(() => {
+    textBox.innerHTML += message[i] === "\n" ? "<br>" : message[i];
+    i++;
+    if (i >= message.length) {
+      clearInterval(interval);
+      showBouquet();
+    }
+  }, 45);
+}
+
+// Show bouquet with clickable message
+function showBouquet() {
+  bouquet.style.display = "block";
+  const flowers = bouquet.querySelectorAll('.flower');
+  flowers.forEach(flower => flower.style.animationPlayState = 'running');
+
+  bouquet.addEventListener('click', () => {
+    bouquet.innerHTML = `
+      <div style="font-size:18px; margin-top:15px;">
+        These flowers are just a small symbol 🌹<br>
+        of all the love I have for you My Princess ❤️<br><br>
+        Forever yours,<br>
+        Hari 💕
+      </div>
+    `;
+  }, { once: true });
+}
+
+// Music play with fade-in
+function playMusic() {
+  const playPromise = song.play();
+  if (playPromise !== undefined) {
+    playPromise.then(_ => {
+      song.volume = 0;
+      let v = 0;
+      let fade = setInterval(() => {
+        if (v < 0.7) { v += 0.05; song.volume = v; }
+        else clearInterval(fade);
+      }, 200);
+    }).catch(err => console.log("Touch required to play audio on mobile"));
+  }
+}
+
+// Hearts
+function startHearts(num) {
+  for (let i = 0; i < num; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.bottom = "0px";
+    heart.style.animationDuration = (4 + Math.random() * 3) + "s";
+    document.body.appendChild(heart);
+    setInterval(() => {
+      heart.remove();
+    }, 6000);
+  }
+}
+
+// Fireworks
+function startFireworks(num) {
+  for (let i = 0; i < num; i++) {
+    const fw = document.createElement("div");
+    fw.className = "firework";
+    fw.style.left = Math.random() * 100 + "vw";
+    fw.style.top = Math.random() * 50 + "vh";
+    document.body.appendChild(fw);
+    setTimeout(() => fw.remove(), 1000);
+  }
+}
+
+// Confetti
+function startConfetti(num) {
+  for (let i = 0; i < num; i++) {
+    const conf = document.createElement("div");
+    conf.className = "confetti";
+    conf.style.backgroundColor = `hsl(${Math.random()*360},80%,60%)`;
+    conf.style.left = Math.random()*100 + "vw";
+    conf.style.animationDuration = (3 + Math.random()*3) + "s";
+    document.body.appendChild(conf);
+    setInterval(() => {
+      conf.remove();
+    }, 6000);
+  }
+}
+</script>
+
+</body>
+</html>
